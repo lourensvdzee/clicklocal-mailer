@@ -1,0 +1,20 @@
+{
+  "name": "clicklocal-mailer",
+  "version": "1.0.0",
+  "description": "Email sender for ClickLocal outreach campaigns",
+  "main": "src/index.js",
+  "scripts": {
+    "test-send": "node src/test-send.js",
+    "send": "node src/send-campaign.js",
+    "status": "node src/check-status.js"
+  },
+  "keywords": [],
+  "author": "ClickLocal",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "googleapis": "^170.0.0",
+    "nodemailer": "^7.0.12"
+  }
+}
