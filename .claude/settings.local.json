@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(npm run build:*)",
+      "Bash(nslookup:*)",
+      "Bash(git commit:*)",
+      "Bash(dir \"c:\\\\Users\\\\loure\\\\Projects\\\\clicklocal-mailer\\\\tmpclaude-*\")",
+      "Bash(dir \"c:\\\\Users\\\\loure\\\\Projects\\\\clicklocal-mailer\"\" 2>nul | findstr \"tmpclaude \")",
+      "Bash(git checkout:*)",
+      "Bash(git merge:*)",
+      "Bash(git branch:*)",
+      "Bash(tasklist:*)",
+      "Bash(gh repo list:*)"
+    ]
+  }
+}

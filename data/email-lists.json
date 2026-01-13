@@ -1,0 +1,22 @@
+[
+  {
+    "id": "4409222b-06d4-4146-8689-140ef75b18fb",
+    "name": "Test List Lourens",
+    "emails": [
+      {
+        "email": "lourensvdzee@hotmail.com"
+      },
+      {
+        "email": "lordemo@hotmail.com"
+      },
+      {
+        "email": "lourensvdzee@gmail.com"
+      },
+      {
+        "email": "info@clicklocal.me"
+      }
+    ],
+    "createdAt": "2026-01-13T16:05:03.363Z",
+    "updatedAt": "2026-01-13T16:05:03.363Z"
+  }
+]
