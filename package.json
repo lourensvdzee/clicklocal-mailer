@@ -4,11 +4,12 @@
   "description": "Email sender for ClickLocal outreach campaigns",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "npm run clean && node src/server.js",
     "dev": "node src/server.js",
     "test-send": "node src/test-send.js",
     "send": "node src/send-campaign.js",
-    "status": "node src/check-status.js"
+    "status": "node src/check-status.js",
+    "clean": "node -e \"require('fs').readdirSync('.').filter(f=>f.startsWith('tmpclaude-')||f==='nul').forEach(f=>require('fs').unlinkSync(f))\" 2>nul || exit 0"
   },
   "keywords": [],
   "author": "ClickLocal",

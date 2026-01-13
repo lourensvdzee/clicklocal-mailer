@@ -1,0 +1,9 @@
+{
+  "files.exclude": {
+    "tmpclaude-*": true,
+    "nul": true
+  },
+  "files.watcherExclude": {
+    "tmpclaude-*": true
+  }
+}
