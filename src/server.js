@@ -326,13 +326,13 @@ app.post('/api/preview', (req, res) => {
     de: `
 <div style="margin-top:40px;padding-top:15px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;text-align:center;">
   <p style="margin:0;">
-    Falls Sie diese E-Mails nicht mehr erhalten möchten, <a href="https://www.clicklocal.me/email?e=example%40email.com" style="color:#9ca3af;">klicken Sie hier</a>.
+    Falls Sie diese E-Mails nicht mehr erhalten möchten, <a href="https://www.clicklocal.me/email?e=example%40email.com&lang=de" style="color:#9ca3af;">klicken Sie hier</a>.
   </p>
 </div>`,
     en: `
 <div style="margin-top:40px;padding-top:15px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;text-align:center;">
   <p style="margin:0;">
-    If you no longer wish to receive these emails, <a href="https://www.clicklocal.me/email?e=example%40email.com" style="color:#9ca3af;">click here</a>.
+    If you no longer wish to receive these emails, <a href="https://www.clicklocal.me/email?e=example%40email.com&lang=en" style="color:#9ca3af;">click here</a>.
   </p>
 </div>`
   };
@@ -443,13 +443,13 @@ app.post('/api/send', async (req, res) => {
     de: `
 <div style="margin-top:40px;padding-top:15px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;text-align:center;">
   <p style="margin:0;">
-    Falls Sie diese E-Mails nicht mehr erhalten möchten, <a href="https://www.clicklocal.me/email?e={{EMAIL}}" style="color:#9ca3af;">klicken Sie hier</a>.
+    Falls Sie diese E-Mails nicht mehr erhalten möchten, <a href="https://www.clicklocal.me/email?e={{EMAIL}}&lang=de" style="color:#9ca3af;">klicken Sie hier</a>.
   </p>
 </div>`,
     en: `
 <div style="margin-top:40px;padding-top:15px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;text-align:center;">
   <p style="margin:0;">
-    If you no longer wish to receive these emails, <a href="https://www.clicklocal.me/email?e={{EMAIL}}" style="color:#9ca3af;">click here</a>.
+    If you no longer wish to receive these emails, <a href="https://www.clicklocal.me/email?e={{EMAIL}}&lang=en" style="color:#9ca3af;">click here</a>.
   </p>
 </div>`
   };
