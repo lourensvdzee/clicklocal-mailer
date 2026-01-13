@@ -10,6 +10,7 @@ const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const { verifyConnection, sendEmail } = require('./mailer');
 const config = require('./config');
+const sheets = require('./sheets');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -226,7 +227,7 @@ app.delete('/api/uploads/:filename', (req, res) => {
 });
 
 // --- Unsubscribe ---
-app.get('/api/unsubscribe/:email', (req, res) => {
+app.get('/api/unsubscribe/:email', async (req, res) => {
   const email = decodeURIComponent(req.params.email).toLowerCase();
   const lists = loadData(LISTS_FILE);
   let found = false;
@@ -254,6 +255,14 @@ app.get('/api/unsubscribe/:email', (req, res) => {
       status: 'unsubscribed'
     });
     saveData(LOGS_FILE, logs);
+
+    // Update Google Sheets column D
+    try {
+      const rowIndex = await sheets.findRowByEmail(email);
+      if (rowIndex) await sheets.markUnsubscribed(rowIndex);
+    } catch (sheetErr) {
+      console.error('Failed to update Google Sheet for unsubscribe:', sheetErr.message);
+    }
   }
 
   // Return a simple confirmation page (DE/EN)
@@ -504,15 +513,36 @@ app.post('/api/send', async (req, res) => {
           logEntry.status = 'sent';
           logEntry.messageId = result.messageId;
           sendSSE('sent', { ...logEntry, index: i + 1, total: recipients.length });
+          // Update Google Sheets
+          try {
+            const rowIndex = await sheets.findRowByEmail(recipient.email);
+            if (rowIndex) await sheets.markSent(rowIndex);
+          } catch (sheetErr) {
+            console.error('Failed to update Google Sheet:', sheetErr.message);
+          }
         } else {
           logEntry.status = 'failed';
           logEntry.error = result.error;
           sendSSE('failed', { ...logEntry, index: i + 1, total: recipients.length });
+          // Update Google Sheets
+          try {
+            const rowIndex = await sheets.findRowByEmail(recipient.email);
+            if (rowIndex) await sheets.markFailed(rowIndex, result.error);
+          } catch (sheetErr) {
+            console.error('Failed to update Google Sheet:', sheetErr.message);
+          }
         }
       } catch (err) {
         logEntry.status = 'failed';
         logEntry.error = err.message;
         sendSSE('failed', { ...logEntry, index: i + 1, total: recipients.length });
+        // Update Google Sheets
+        try {
+          const rowIndex = await sheets.findRowByEmail(recipient.email);
+          if (rowIndex) await sheets.markFailed(rowIndex, err.message);
+        } catch (sheetErr) {
+          console.error('Failed to update Google Sheet:', sheetErr.message);
+        }
       }
 
       logs.push(logEntry);

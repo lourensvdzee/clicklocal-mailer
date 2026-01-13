@@ -1,1 +1,52 @@
-[]
+[
+  {
+    "id": "548d8225-d823-4846-9e34-40051b1b99e1",
+    "campaignId": "4d1b610d-c712-49c0-8367-097b287dbcc6",
+    "templateName": "Retailer outreach No.2 - Sustainable (correction)",
+    "email": "lourensvdzee@hotmail.com",
+    "subject": "ClickLocal Update: Wir freuen uns über euer Feedback",
+    "timestamp": "2026-01-13T19:16:12.284Z",
+    "status": "sent",
+    "messageId": "<26c17c25-cb8b-677f-bcec-2b04f2e7847a@clicklocal.me>"
+  },
+  {
+    "id": "5975144e-a71c-4582-a7ef-64ab8b3b71cb",
+    "campaignId": "4d1b610d-c712-49c0-8367-097b287dbcc6",
+    "templateName": "Retailer outreach No.2 - Sustainable (correction)",
+    "email": "lordemo@hotmail.com",
+    "subject": "ClickLocal Update: Wir freuen uns über euer Feedback",
+    "timestamp": "2026-01-13T19:16:42.644Z",
+    "status": "sent",
+    "messageId": "<763cbd63-6a52-e690-31a1-606d4ae418b6@clicklocal.me>"
+  },
+  {
+    "id": "3c1fa150-3e5e-4731-8548-c585cc5c7de1",
+    "campaignId": "4d1b610d-c712-49c0-8367-097b287dbcc6",
+    "templateName": "Retailer outreach No.2 - Sustainable (correction)",
+    "email": "lourensvdzee@gmail.com",
+    "subject": "ClickLocal Update: Wir freuen uns über euer Feedback",
+    "timestamp": "2026-01-13T19:17:12.951Z",
+    "status": "sent",
+    "messageId": "<3ba73572-d530-dc68-ba5b-44089f985c41@clicklocal.me>"
+  },
+  {
+    "id": "d6dfca2f-cfb4-4e16-a877-bd35e8152487",
+    "campaignId": "4d1b610d-c712-49c0-8367-097b287dbcc6",
+    "templateName": "Retailer outreach No.2 - Sustainable (correction)",
+    "email": "info@clicklocal.me",
+    "subject": "ClickLocal Update: Wir freuen uns über euer Feedback",
+    "timestamp": "2026-01-13T19:17:43.279Z",
+    "status": "sent",
+    "messageId": "<17d90d59-df83-b302-6b9c-ad25cb616e4e@clicklocal.me>"
+  },
+  {
+    "id": "46667084-41a3-4bf5-b7a1-491a800dc939",
+    "campaignId": "402fd6bb-5523-4d32-a1e2-01f93d37233c",
+    "templateName": "Retailer outreach No.2 - Sustainable (correction)",
+    "email": "lourensvdzee@gmail.com",
+    "subject": "ClickLocal-Update: jetzt mit funktionierenden Links",
+    "timestamp": "2026-01-13T19:44:11.582Z",
+    "status": "sent",
+    "messageId": "<0158161f-7238-0039-8392-e55ee24af308@clicklocal.me>"
+  }
+]

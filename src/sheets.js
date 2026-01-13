@@ -23,14 +23,14 @@ async function initSheets() {
 
 /**
  * Get all rows from the sheet
- * Expected columns: A=email, B=send_status, C=sent_at
+ * Expected columns: A=email, B=send_status, C=sent_at, D=unsubscribed
  */
 async function getRows() {
   const sheets = await initSheets();
 
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: config.googleSheets.sheetId,
-    range: 'email_list_test!A:C', // email, send_status, sent_at
+    range: 'email_list_test!A:D', // email, send_status, sent_at, unsubscribed
   });
 
   const rows = response.data.values || [];
@@ -41,6 +41,7 @@ async function getRows() {
     email: row[0] || '',
     sendStatus: row[1] || '',
     sentAt: row[2] || '',
+    unsubscribed: row[3] || '',
   }));
 }
 
@@ -103,6 +104,34 @@ async function markFailed(rowIndex, error) {
   await updateRow(rowIndex, `FAILED: ${error}`);
 }
 
+/**
+ * Mark a row as unsubscribed (column D)
+ */
+async function markUnsubscribed(rowIndex) {
+  const sheets = await initSheets();
+  const timestamp = new Date().toISOString();
+
+  await sheets.spreadsheets.values.update({
+    spreadsheetId: config.googleSheets.sheetId,
+    range: `email_list_test!D${rowIndex}`,
+    valueInputOption: 'RAW',
+    requestBody: {
+      values: [[timestamp]],
+    },
+  });
+
+  console.log(`Row ${rowIndex} marked as unsubscribed at ${timestamp}`);
+}
+
+/**
+ * Find row index by email address
+ */
+async function findRowByEmail(email) {
+  const rows = await getRows();
+  const row = rows.find(r => r.email.toLowerCase() === email.toLowerCase());
+  return row ? row.rowIndex : null;
+}
+
 module.exports = {
   initSheets,
   getRows,
@@ -110,4 +139,6 @@ module.exports = {
   getStats,
   markSent,
   markFailed,
+  markUnsubscribed,
+  findRowByEmail,
 };
