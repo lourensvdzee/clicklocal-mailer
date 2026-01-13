@@ -22,5 +22,5 @@ module.exports = {
     privateKey: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
   },
 
-  rateLimitSeconds: parseInt(process.env.RATE_LIMIT_SECONDS, 10) || 30,
+  rateLimitSeconds: parseInt(process.env.RATE_LIMIT_SECONDS, 10) || 120,
 };

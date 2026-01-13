@@ -4,6 +4,8 @@
   "description": "Email sender for ClickLocal outreach campaigns",
   "main": "src/index.js",
   "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
     "test-send": "node src/test-send.js",
     "send": "node src/send-campaign.js",
     "status": "node src/check-status.js"
@@ -14,7 +16,10 @@
   "type": "commonjs",
   "dependencies": {
     "dotenv": "^17.2.3",
+    "express": "^5.2.1",
     "googleapis": "^170.0.0",
-    "nodemailer": "^7.0.12"
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.12",
+    "uuid": "^13.0.0"
   }
 }
