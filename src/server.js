@@ -618,6 +618,10 @@ app.post('/api/send', async (req, res) => {
           html += footer;
         }
 
+        // Add tracking pixel for open tracking
+        const trackingPixel = `<img src="https://www.clicklocal.me/api/track?e=${encodeURIComponent(recipient.email)}&s=${encodeURIComponent(sheetName)}" width="1" height="1" style="display:none;width:1px;height:1px;" alt="">`;
+        html += trackingPixel;
+
         const result = await sendEmail({
           to: recipient.email,
           subject: template.subject,
@@ -809,6 +813,10 @@ app.post('/api/campaign-resume', async (req, res) => {
         if (optOutLang && optOutFooters[optOutLang]) {
           html += optOutFooters[optOutLang].replace('{{EMAIL}}', encodeURIComponent(recipient.email));
         }
+
+        // Add tracking pixel for open tracking
+        const trackingPixel = `<img src="https://www.clicklocal.me/api/track?e=${encodeURIComponent(recipient.email)}&s=${encodeURIComponent(sheetName)}" width="1" height="1" style="display:none;width:1px;height:1px;" alt="">`;
+        html += trackingPixel;
 
         const result = await sendEmail({ to: recipient.email, subject: template.subject, html });
 

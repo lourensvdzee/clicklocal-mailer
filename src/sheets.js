@@ -67,8 +67,8 @@ async function createSheetTab(sheetName, emails) {
   }
 
   // Add headers and email data
-  const headerRow = ['email', 'status', 'sent_at', 'unsubscribed'];
-  const dataRows = emails.map(e => [e.email || e, '', '', '']);
+  const headerRow = ['email', 'status', 'sent_at', 'unsubscribed', 'opened_at'];
+  const dataRows = emails.map(e => [e.email || e, '', '', '', '']);
   const allRows = [headerRow, ...dataRows];
 
   await sheets.spreadsheets.values.update({
@@ -93,7 +93,7 @@ async function getRowsFromSheet(sheetName) {
 
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: config.googleSheets.sheetId,
-    range: `${sheetName}!A:D`,
+    range: `${sheetName}!A:E`,
   });
 
   const rows = response.data.values || [];
@@ -105,6 +105,7 @@ async function getRowsFromSheet(sheetName) {
     sendStatus: row[1] || '',
     sentAt: row[2] || '',
     unsubscribed: row[3] || '',
+    openedAt: row[4] || '',
   }));
 }
 
