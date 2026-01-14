@@ -22,6 +22,48 @@ const CLICKLOCAL_PUBLIC = path.join(__dirname, '..', '..', 'clicklocal', 'public
 const TEMPLATES_FILE = path.join(DATA_DIR, 'templates.json');
 const LISTS_FILE = path.join(DATA_DIR, 'email-lists.json');
 const LOGS_FILE = path.join(DATA_DIR, 'send-logs.json');
+const CAMPAIGN_STATE_FILE = path.join(DATA_DIR, 'campaign-state.json');
+
+// Quiet hours configuration (21:00 - 08:00)
+const QUIET_HOURS = {
+  start: 21, // 21:00 (9 PM)
+  end: 8,    // 08:00 (8 AM)
+};
+
+/**
+ * Check if current time is within quiet hours
+ */
+function isQuietHours() {
+  const now = new Date();
+  const hour = now.getHours();
+  // Quiet hours: 21:00 - 08:00 (overnight)
+  return hour >= QUIET_HOURS.start || hour < QUIET_HOURS.end;
+}
+
+/**
+ * Get milliseconds until quiet hours end (8 AM)
+ */
+function getMsUntilQuietHoursEnd() {
+  const now = new Date();
+  const target = new Date(now);
+  target.setHours(QUIET_HOURS.end, 0, 0, 0);
+
+  // If it's before 8 AM, target is today; otherwise tomorrow
+  if (now.getHours() >= QUIET_HOURS.end) {
+    target.setDate(target.getDate() + 1);
+  }
+
+  return target.getTime() - now.getTime();
+}
+
+/**
+ * Format time remaining as human-readable string
+ */
+function formatTimeRemaining(ms) {
+  const hours = Math.floor(ms / (1000 * 60 * 60));
+  const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+  return `${hours}h ${minutes}m`;
+}
 
 // Ensure directories exist
 [DATA_DIR, UPLOADS_DIR].forEach(dir => {
@@ -37,6 +79,7 @@ function initDataFile(filePath, defaultData = []) {
 initDataFile(TEMPLATES_FILE, []);
 initDataFile(LISTS_FILE, []);
 initDataFile(LOGS_FILE, []);
+initDataFile(CAMPAIGN_STATE_FILE, null);
 
 // Middleware
 app.use(express.json());
@@ -148,12 +191,29 @@ app.get('/api/lists', (req, res) => {
   res.json(loadData(LISTS_FILE));
 });
 
-app.post('/api/lists', (req, res) => {
+app.post('/api/lists', async (req, res) => {
   const lists = loadData(LISTS_FILE);
+  const emails = req.body.emails || [];
+
+  // Create Google Sheet tab for this list
+  let sheetName = null;
+  try {
+    // Sanitize list name for sheet tab (remove special chars, limit length)
+    const sanitizedName = req.body.name
+      .replace(/[^a-zA-Z0-9_-]/g, '_')
+      .substring(0, 50);
+    sheetName = await sheets.createSheetTab(sanitizedName, emails);
+    console.log(`Created Google Sheet tab: ${sheetName}`);
+  } catch (err) {
+    console.error('Failed to create Google Sheet tab:', err.message);
+    // Continue without sheet - will use default
+  }
+
   const list = {
     id: uuidv4(),
     name: req.body.name,
-    emails: req.body.emails || [], // Array of { email, name? }
+    sheetName: sheetName, // Store the sheet tab name
+    emails: emails, // Array of { email, name? }
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
@@ -430,6 +490,11 @@ app.post('/api/send', async (req, res) => {
   const campaignId = uuidv4();
   const logs = loadData(LOGS_FILE);
 
+  // Get the sheet name for this list (if it has one)
+  const lists = loadData(LISTS_FILE);
+  const list = lists.find(l => l.id === listId);
+  const sheetName = list?.sheetName || 'email_list_test';
+
   res.json({
     success: true,
     campaignId,
@@ -454,10 +519,60 @@ app.post('/api/send', async (req, res) => {
 </div>`
   };
 
+  // Save campaign state for resume capability
+  const campaignState = {
+    campaignId,
+    templateId,
+    listId,
+    sheetName,
+    optOutLang,
+    totalRecipients: recipients.length,
+    sentEmails: [],
+    startedAt: new Date().toISOString(),
+    status: 'running'
+  };
+  saveData(CAMPAIGN_STATE_FILE, campaignState);
+
   // Send emails asynchronously
   (async () => {
     for (let i = 0; i < recipients.length; i++) {
       const recipient = recipients[i];
+
+      // Check quiet hours before each email
+      if (isQuietHours()) {
+        const msUntilResume = getMsUntilQuietHoursEnd();
+        const timeStr = formatTimeRemaining(msUntilResume);
+        console.log(`Quiet hours active. Pausing campaign. Will resume at 08:00 (in ${timeStr})`);
+
+        sendSSE('paused', {
+          campaignId,
+          reason: 'quiet_hours',
+          resumeAt: '08:00',
+          timeRemaining: timeStr,
+          sentSoFar: i,
+          total: recipients.length
+        });
+
+        // Update campaign state
+        campaignState.status = 'paused_quiet_hours';
+        campaignState.pausedAt = new Date().toISOString();
+        campaignState.currentIndex = i;
+        saveData(CAMPAIGN_STATE_FILE, campaignState);
+
+        // Wait until quiet hours end
+        await new Promise(r => setTimeout(r, msUntilResume));
+
+        // After waiting, send resume notification
+        console.log('Quiet hours ended. Resuming campaign.');
+        sendSSE('resumed', {
+          campaignId,
+          sentSoFar: i,
+          total: recipients.length
+        });
+
+        campaignState.status = 'running';
+        saveData(CAMPAIGN_STATE_FILE, campaignState);
+      }
 
       sendSSE('sending', {
         campaignId,
@@ -489,8 +604,8 @@ app.post('/api/send', async (req, res) => {
           // Convert newlines to <br>
           processed = processed.replace(/\n/g, '<br>');
           // Restore preserved tags
-          preservedTags.forEach((tag, i) => {
-            processed = processed.replace('{{TAG_' + i + '}}', tag);
+          preservedTags.forEach((tag, idx) => {
+            processed = processed.replace('{{TAG_' + idx + '}}', tag);
           });
           html = '<div style="font-family: sans-serif;">' + processed + '</div>';
         } else {
@@ -513,10 +628,16 @@ app.post('/api/send', async (req, res) => {
           logEntry.status = 'sent';
           logEntry.messageId = result.messageId;
           sendSSE('sent', { ...logEntry, index: i + 1, total: recipients.length });
+
+          // Track sent email in campaign state
+          campaignState.sentEmails.push(recipient.email);
+          campaignState.currentIndex = i + 1;
+          saveData(CAMPAIGN_STATE_FILE, campaignState);
+
           // Update Google Sheets
           try {
-            const rowIndex = await sheets.findRowByEmail(recipient.email);
-            if (rowIndex) await sheets.markSent(rowIndex);
+            const rowIndex = await sheets.findRowByEmailInSheet(sheetName, recipient.email);
+            if (rowIndex) await sheets.updateRowInSheet(sheetName, rowIndex, 'SENT');
           } catch (sheetErr) {
             console.error('Failed to update Google Sheet:', sheetErr.message);
           }
@@ -526,8 +647,8 @@ app.post('/api/send', async (req, res) => {
           sendSSE('failed', { ...logEntry, index: i + 1, total: recipients.length });
           // Update Google Sheets
           try {
-            const rowIndex = await sheets.findRowByEmail(recipient.email);
-            if (rowIndex) await sheets.markFailed(rowIndex, result.error);
+            const rowIndex = await sheets.findRowByEmailInSheet(sheetName, recipient.email);
+            if (rowIndex) await sheets.updateRowInSheet(sheetName, rowIndex, `FAILED: ${result.error}`);
           } catch (sheetErr) {
             console.error('Failed to update Google Sheet:', sheetErr.message);
           }
@@ -538,8 +659,8 @@ app.post('/api/send', async (req, res) => {
         sendSSE('failed', { ...logEntry, index: i + 1, total: recipients.length });
         // Update Google Sheets
         try {
-          const rowIndex = await sheets.findRowByEmail(recipient.email);
-          if (rowIndex) await sheets.markFailed(rowIndex, err.message);
+          const rowIndex = await sheets.findRowByEmailInSheet(sheetName, recipient.email);
+          if (rowIndex) await sheets.updateRowInSheet(sheetName, rowIndex, `FAILED: ${err.message}`);
         } catch (sheetErr) {
           console.error('Failed to update Google Sheet:', sheetErr.message);
         }
@@ -559,12 +680,172 @@ app.post('/api/send', async (req, res) => {
       }
     }
 
+    // Campaign complete - clear state
+    campaignState.status = 'complete';
+    campaignState.completedAt = new Date().toISOString();
+    saveData(CAMPAIGN_STATE_FILE, campaignState);
+
     sendSSE('complete', {
       campaignId,
       total: recipients.length,
       sent: logs.filter(l => l.campaignId === campaignId && l.status === 'sent').length,
       failed: logs.filter(l => l.campaignId === campaignId && l.status === 'failed').length
     });
+  })();
+});
+
+// --- Campaign State & Resume ---
+app.get('/api/campaign-state', (req, res) => {
+  const state = loadData(CAMPAIGN_STATE_FILE);
+  res.json(state);
+});
+
+app.post('/api/campaign-resume', async (req, res) => {
+  const state = loadData(CAMPAIGN_STATE_FILE);
+
+  if (!state || state.status === 'complete') {
+    return res.json({ success: false, message: 'No campaign to resume' });
+  }
+
+  // Check if we're in quiet hours
+  if (isQuietHours()) {
+    const msUntil = getMsUntilQuietHoursEnd();
+    return res.json({
+      success: false,
+      message: `Cannot resume during quiet hours (21:00-08:00). Will be available in ${formatTimeRemaining(msUntil)}`
+    });
+  }
+
+  // Load template and list
+  const templates = loadData(TEMPLATES_FILE);
+  const template = templates.find(t => t.id === state.templateId);
+  if (!template) {
+    return res.status(400).json({ error: 'Template not found' });
+  }
+
+  const sheetName = state.sheetName || 'email_list_test';
+
+  // Get unsent emails from Google Sheet (skips SENT, has timestamp, or unsubscribed)
+  let recipients;
+  try {
+    recipients = await sheets.getUnsentFromSheet(sheetName);
+    console.log(`Found ${recipients.length} unsent emails to resume`);
+  } catch (err) {
+    console.error('Failed to get unsent emails from sheet:', err.message);
+    return res.status(500).json({ error: 'Failed to read from Google Sheets' });
+  }
+
+  if (recipients.length === 0) {
+    // Mark campaign as complete
+    state.status = 'complete';
+    state.completedAt = new Date().toISOString();
+    saveData(CAMPAIGN_STATE_FILE, state);
+    return res.json({ success: true, message: 'All emails already sent' });
+  }
+
+  // Verify SMTP
+  const connected = await verifyConnection();
+  if (!connected) {
+    return res.status(500).json({ error: 'SMTP connection failed' });
+  }
+
+  const campaignId = state.campaignId;
+  const optOutLang = state.optOutLang || template.optOutLang || '';
+  const logs = loadData(LOGS_FILE);
+
+  res.json({
+    success: true,
+    message: `Resuming campaign with ${recipients.length} remaining emails`,
+    campaignId,
+    remaining: recipients.length
+  });
+
+  // Opt-out footers
+  const optOutFooters = {
+    de: `<div style="margin-top:40px;padding-top:15px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;text-align:center;"><p style="margin:0;">Falls Sie diese E-Mails nicht mehr erhalten möchten, <a href="https://www.clicklocal.me/email?e={{EMAIL}}&lang=de" style="color:#9ca3af;">klicken Sie hier</a>.</p></div>`,
+    en: `<div style="margin-top:40px;padding-top:15px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;text-align:center;"><p style="margin:0;">If you no longer wish to receive these emails, <a href="https://www.clicklocal.me/email?e={{EMAIL}}&lang=en" style="color:#9ca3af;">click here</a>.</p></div>`
+  };
+
+  // Update state
+  state.status = 'running';
+  state.resumedAt = new Date().toISOString();
+  saveData(CAMPAIGN_STATE_FILE, state);
+
+  // Resume sending
+  (async () => {
+    for (let i = 0; i < recipients.length; i++) {
+      const recipient = recipients[i];
+
+      // Check quiet hours
+      if (isQuietHours()) {
+        const msUntilResume = getMsUntilQuietHoursEnd();
+        console.log(`Quiet hours. Pausing. Resume at 08:00`);
+        sendSSE('paused', { campaignId, reason: 'quiet_hours', resumeAt: '08:00' });
+        state.status = 'paused_quiet_hours';
+        saveData(CAMPAIGN_STATE_FILE, state);
+        await new Promise(r => setTimeout(r, msUntilResume));
+        state.status = 'running';
+        saveData(CAMPAIGN_STATE_FILE, state);
+        sendSSE('resumed', { campaignId });
+      }
+
+      sendSSE('sending', { campaignId, index: i + 1, total: recipients.length, email: recipient.email, status: 'sending' });
+
+      const logEntry = {
+        id: uuidv4(),
+        campaignId,
+        templateName: template.name,
+        email: recipient.email,
+        subject: template.subject,
+        timestamp: new Date().toISOString(),
+        status: 'pending'
+      };
+
+      try {
+        let html = template.contentType === 'text'
+          ? '<div style="font-family: sans-serif;">' + template.content.replace(/\n/g, '<br>') + '</div>'
+          : template.content;
+
+        if (optOutLang && optOutFooters[optOutLang]) {
+          html += optOutFooters[optOutLang].replace('{{EMAIL}}', encodeURIComponent(recipient.email));
+        }
+
+        const result = await sendEmail({ to: recipient.email, subject: template.subject, html });
+
+        if (result.success) {
+          logEntry.status = 'sent';
+          logEntry.messageId = result.messageId;
+          sendSSE('sent', { ...logEntry, index: i + 1, total: recipients.length });
+          try {
+            await sheets.updateRowInSheet(sheetName, recipient.rowIndex, 'SENT');
+          } catch (e) { console.error('Sheet update failed:', e.message); }
+        } else {
+          logEntry.status = 'failed';
+          logEntry.error = result.error;
+          sendSSE('failed', { ...logEntry, index: i + 1, total: recipients.length });
+          try {
+            await sheets.updateRowInSheet(sheetName, recipient.rowIndex, `FAILED: ${result.error}`);
+          } catch (e) { console.error('Sheet update failed:', e.message); }
+        }
+      } catch (err) {
+        logEntry.status = 'failed';
+        logEntry.error = err.message;
+        sendSSE('failed', { ...logEntry, index: i + 1, total: recipients.length });
+      }
+
+      logs.push(logEntry);
+      saveData(LOGS_FILE, logs);
+
+      if (i < recipients.length - 1) {
+        sendSSE('waiting', { campaignId, seconds: config.rateLimitSeconds, nextEmail: recipients[i + 1]?.email });
+        await new Promise(r => setTimeout(r, config.rateLimitSeconds * 1000));
+      }
+    }
+
+    state.status = 'complete';
+    state.completedAt = new Date().toISOString();
+    saveData(CAMPAIGN_STATE_FILE, state);
+    sendSSE('complete', { campaignId, total: recipients.length });
   })();
 });
 
@@ -581,6 +862,13 @@ app.get('/api/smtp-status', async (req, res) => {
   } catch (err) {
     res.json({ connected: false, error: err.message });
   }
+});
+
+// --- Graceful Shutdown ---
+app.post('/api/shutdown', (req, res) => {
+  res.json({ success: true, message: 'Server shutting down...' });
+  console.log('Shutdown requested via API');
+  setTimeout(() => process.exit(0), 500);
 });
 
 // ============== HTML UI ==============
@@ -812,22 +1100,22 @@ function getHTML() {
           <h2 style="margin-bottom:15px">Create/Edit Template</h2>
           <input type="hidden" id="template-id">
           <div class="form-group">
-            <label>Template Name</label>
+            <label for="template-name">Template Name</label>
             <input type="text" id="template-name" placeholder="e.g. Retailer Outreach v1">
           </div>
           <div class="form-group">
-            <label>Subject Line</label>
+            <label for="template-subject">Subject Line</label>
             <input type="text" id="template-subject" placeholder="e.g. Quick question about your store">
           </div>
           <div class="form-group">
-            <label>Content Type</label>
-            <div class="content-type-toggle">
+            <span id="content-type-label">Content Type</span>
+            <div class="content-type-toggle" role="radiogroup" aria-labelledby="content-type-label">
               <label><input type="radio" name="content-type" value="html" checked> HTML</label>
               <label><input type="radio" name="content-type" value="text"> Plain Text</label>
             </div>
           </div>
           <div class="form-group">
-            <label>Email Content</label>
+            <label for="template-content">Email Content</label>
             <textarea id="template-content" placeholder="Enter your email content here..."></textarea>
             <!-- Formatting toolbar -->
             <div style="margin-top:8px;padding:8px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -840,7 +1128,7 @@ function getHTML() {
 
           <!-- Image Insert Section -->
           <div class="form-group" id="image-insert-section">
-            <label>Insert Image</label>
+            <label for="existing-images">Insert Image</label>
             <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
               <select id="existing-images" style="flex:1;min-width:200px">
                 <option value="">-- Select existing image --</option>
@@ -869,7 +1157,7 @@ function getHTML() {
           </div>
 
           <div class="form-group">
-            <label>Opt-out Footer</label>
+            <label for="template-optout">Opt-out Footer</label>
             <select id="template-optout" style="width:100%">
               <option value="">None</option>
               <option value="de">German (Deutsch)</option>
@@ -898,11 +1186,11 @@ function getHTML() {
           <h2 style="margin-bottom:15px">Create/Edit List</h2>
           <input type="hidden" id="list-id">
           <div class="form-group">
-            <label>List Name</label>
+            <label for="list-name">List Name</label>
             <input type="text" id="list-name" placeholder="e.g. Berlin Retailers">
           </div>
           <div class="form-group">
-            <label>Email Addresses (one per line or comma-separated)</label>
+            <label for="list-emails">Email Addresses (one per line or comma-separated)</label>
             <textarea id="list-emails" placeholder="email1@example.com&#10;email2@example.com&#10;..."></textarea>
           </div>
           <div class="btn-group">
@@ -924,27 +1212,35 @@ function getHTML() {
           <h2 style="margin-bottom:15px">Send Campaign</h2>
 
           <div class="form-group">
-            <label>Select Template</label>
+            <label for="send-template">Select Template</label>
             <select id="send-template">
               <option value="">-- Select a template --</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label>Select Email List</label>
+            <label for="send-list">Select Email List</label>
             <select id="send-list">
               <option value="">-- Select a list --</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label>Or Send Test Email To</label>
+            <label for="test-email">Or Send Test Email To</label>
             <input type="email" id="test-email" placeholder="your@email.com">
           </div>
 
           <div style="margin-top:15px">
             <button class="btn secondary" onclick="previewCampaign()" style="width:100%;margin-bottom:20px">Preview Email</button>
             <button class="btn success" onclick="sendCampaign()" style="width:100%">Send Campaign</button>
+          </div>
+
+          <!-- Resume Campaign Section -->
+          <div id="resume-section" style="display:none;margin-top:20px;padding:15px;background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;">
+            <h3 style="color:#92400e;margin-bottom:10px">⚠️ Incomplete Campaign Detected</h3>
+            <p id="resume-info" style="color:#78350f;font-size:14px;margin-bottom:15px"></p>
+            <button class="btn" onclick="resumeCampaign()" style="background:#f59e0b;border-color:#f59e0b">Resume Campaign</button>
+            <button class="btn secondary" onclick="dismissResume()" style="margin-left:10px">Dismiss</button>
           </div>
 
           <div id="send-progress" style="display:none;margin-top:20px;">
@@ -1491,6 +1787,26 @@ function getHTML() {
       loadLogs();
     });
 
+    eventSource.addEventListener('paused', function(e) {
+      var data = JSON.parse(e.data);
+      var text = 'PAUSED - Quiet hours (21:00-08:00). ';
+      if (data.timeRemaining) {
+        text += 'Resuming at ' + data.resumeAt + ' (in ' + data.timeRemaining + '). ';
+      }
+      if (data.sentSoFar !== undefined) {
+        text += 'Progress: ' + data.sentSoFar + '/' + data.total + ' sent.';
+      }
+      document.getElementById('progress-text').textContent = text;
+      document.getElementById('progress-fill').style.background = '#f59e0b';
+    });
+
+    eventSource.addEventListener('resumed', function(e) {
+      var data = JSON.parse(e.data);
+      document.getElementById('progress-text').textContent =
+        'Resumed! Continuing from ' + data.sentSoFar + '/' + data.total + '...';
+      document.getElementById('progress-fill').style.background = '#22c55e';
+    });
+
     function addLogEntry(data, status) {
       var container = document.getElementById('log-container');
       var time = new Date(data.timestamp).toLocaleString();
@@ -1506,21 +1822,88 @@ function getHTML() {
       container.insertBefore(entry, container.firstChild);
     }
 
+    // ========== Resume Campaign ==========
+    async function checkCampaignState() {
+      try {
+        var res = await fetch('/api/campaign-state');
+        var state = await res.json();
+        if (state && state.status && state.status !== 'complete') {
+          var info = 'Campaign started: ' + new Date(state.startedAt).toLocaleString();
+          if (state.sentEmails) {
+            info += '<br>Progress: ' + state.sentEmails.length + '/' + state.totalRecipients + ' emails sent';
+          }
+          info += '<br>Status: ' + state.status.replace(/_/g, ' ');
+          document.getElementById('resume-info').innerHTML = info;
+          document.getElementById('resume-section').style.display = 'block';
+        } else {
+          document.getElementById('resume-section').style.display = 'none';
+        }
+      } catch (e) {
+        console.error('Failed to check campaign state:', e);
+      }
+    }
+
+    async function resumeCampaign() {
+      if (!confirm('Resume the incomplete campaign?')) return;
+      document.getElementById('send-progress').style.display = 'block';
+      document.getElementById('progress-text').textContent = 'Resuming campaign...';
+      document.getElementById('progress-fill').style.width = '0%';
+      document.getElementById('progress-fill').style.background = '#22c55e';
+
+      try {
+        var res = await fetch('/api/campaign-resume', { method: 'POST' });
+        var data = await res.json();
+        if (data.success) {
+          document.getElementById('progress-text').textContent = data.message;
+          document.getElementById('resume-section').style.display = 'none';
+        } else {
+          document.getElementById('progress-text').textContent = 'Cannot resume: ' + data.message;
+        }
+      } catch (e) {
+        document.getElementById('progress-text').textContent = 'Error: ' + e.message;
+      }
+    }
+
+    function dismissResume() {
+      document.getElementById('resume-section').style.display = 'none';
+    }
+
     // Initial load
     checkSMTP();
     loadTemplates();
     loadLists();
     loadExistingImages();
     loadLogs();
+    checkCampaignState();
 
     // Update template selector when switching to send tab
     document.querySelector('[data-tab="send"]').addEventListener('click', function() {
       loadTemplates();
       loadLists();
+      checkCampaignState();
     });
   </script>
 </body>
 </html>`;
+}
+
+// Check for incomplete campaign on startup
+function checkIncompleteCampaign() {
+  const state = loadData(CAMPAIGN_STATE_FILE);
+  if (state && state.status && state.status !== 'complete') {
+    console.log('');
+    console.log('  ⚠️  INCOMPLETE CAMPAIGN DETECTED');
+    console.log('  Campaign ID: ' + state.campaignId);
+    console.log('  Status: ' + state.status);
+    console.log('  Started: ' + state.startedAt);
+    if (state.sentEmails) {
+      console.log('  Emails sent: ' + state.sentEmails.length + '/' + state.totalRecipients);
+    }
+    console.log('');
+    console.log('  To resume: POST /api/campaign-resume');
+    console.log('  Or click "Resume Campaign" in the UI');
+    console.log('');
+  }
 }
 
 // Start server
@@ -1534,12 +1917,17 @@ app.listen(PORT, '127.0.0.1', function() {
   console.log('');
   console.log('  Available features:');
   console.log('  - Create and manage email templates (HTML/Text)');
-  console.log('  - Manage email lists');
+  console.log('  - Manage email lists (synced to Google Sheets)');
   console.log('  - Upload images for emails');
   console.log('  - Preview emails before sending');
   console.log('  - Send campaigns with real-time progress');
+  console.log('  - Quiet hours: 21:00-08:00 (auto-pause/resume)');
+  console.log('  - Auto-resume incomplete campaigns');
   console.log('  - View send logs');
   console.log('');
   console.log('  Press Ctrl+C to stop the server');
   console.log('==================================================');
+
+  // Check for incomplete campaigns
+  checkIncompleteCampaign();
 });

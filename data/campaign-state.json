@@ -1,0 +1,13 @@
+{
+  "campaignId": "bfa1f3e4-1a06-460a-9bf5-9d2bf730fc24",
+  "templateId": "102b1e3b-b4a0-485d-8301-890477b7c416",
+  "listId": "e495df54-a148-42e4-a471-d8f980e6c454",
+  "sheetName": "Lourens_only",
+  "optOutLang": "de",
+  "totalRecipients": 4,
+  "sentEmails": [],
+  "startedAt": "2026-01-14T20:25:50.771Z",
+  "status": "paused_quiet_hours",
+  "pausedAt": "2026-01-14T20:25:50.779Z",
+  "currentIndex": 0
+}

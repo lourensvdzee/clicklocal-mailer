@@ -18,7 +18,9 @@
       "Bash(git remote remove:*)",
       "Bash(git remote add:*)",
       "Bash(ping:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(dir:*)",
+      "Bash(powershell -Command:*)"
     ]
   }
 }
