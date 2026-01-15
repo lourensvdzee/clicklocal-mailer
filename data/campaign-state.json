@@ -7,7 +7,9 @@
   "totalRecipients": 4,
   "sentEmails": [],
   "startedAt": "2026-01-14T20:25:50.771Z",
-  "status": "paused_quiet_hours",
+  "status": "complete",
   "pausedAt": "2026-01-14T20:25:50.779Z",
-  "currentIndex": 0
+  "currentIndex": 0,
+  "resumedAt": "2026-01-15T07:38:29.499Z",
+  "completedAt": "2026-01-15T07:40:32.322Z"
 }

@@ -547,17 +547,18 @@ app.post('/api/send', async (req, res) => {
   });
 
   // Opt-out footers by language (subtle text, links to clicklocal.me/email)
+  // {{EMAIL}} and {{SHEET}} are replaced when sending
   const optOutFooters = {
     de: `
 <div style="margin-top:40px;padding-top:15px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;text-align:center;">
   <p style="margin:0;">
-    Falls Sie diese E-Mails nicht mehr erhalten möchten, <a href="https://www.clicklocal.me/email?e={{EMAIL}}&lang=de" style="color:#9ca3af;">klicken Sie hier</a>.
+    Falls Sie diese E-Mails nicht mehr erhalten möchten, <a href="https://www.clicklocal.me/email?e={{EMAIL}}&s={{SHEET}}&lang=de" style="color:#9ca3af;">klicken Sie hier</a>.
   </p>
 </div>`,
     en: `
 <div style="margin-top:40px;padding-top:15px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;text-align:center;">
   <p style="margin:0;">
-    If you no longer wish to receive these emails, <a href="https://www.clicklocal.me/email?e={{EMAIL}}&lang=en" style="color:#9ca3af;">click here</a>.
+    If you no longer wish to receive these emails, <a href="https://www.clicklocal.me/email?e={{EMAIL}}&s={{SHEET}}&lang=en" style="color:#9ca3af;">click here</a>.
   </p>
 </div>`
   };
@@ -657,7 +658,9 @@ app.post('/api/send', async (req, res) => {
 
         // Add opt-out footer if language selected in template
         if (optOutLang && optOutFooters[optOutLang]) {
-          const footer = optOutFooters[optOutLang].replace('{{EMAIL}}', encodeURIComponent(recipient.email));
+          const footer = optOutFooters[optOutLang]
+            .replace('{{EMAIL}}', encodeURIComponent(recipient.email))
+            .replace('{{SHEET}}', encodeURIComponent(sheetName));
           html += footer;
         }
 
@@ -812,8 +815,8 @@ app.post('/api/campaign-resume', async (req, res) => {
 
   // Opt-out footers
   const optOutFooters = {
-    de: `<div style="margin-top:40px;padding-top:15px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;text-align:center;"><p style="margin:0;">Falls Sie diese E-Mails nicht mehr erhalten möchten, <a href="https://www.clicklocal.me/email?e={{EMAIL}}&lang=de" style="color:#9ca3af;">klicken Sie hier</a>.</p></div>`,
-    en: `<div style="margin-top:40px;padding-top:15px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;text-align:center;"><p style="margin:0;">If you no longer wish to receive these emails, <a href="https://www.clicklocal.me/email?e={{EMAIL}}&lang=en" style="color:#9ca3af;">click here</a>.</p></div>`
+    de: `<div style="margin-top:40px;padding-top:15px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;text-align:center;"><p style="margin:0;">Falls Sie diese E-Mails nicht mehr erhalten möchten, <a href="https://www.clicklocal.me/email?e={{EMAIL}}&s={{SHEET}}&lang=de" style="color:#9ca3af;">klicken Sie hier</a>.</p></div>`,
+    en: `<div style="margin-top:40px;padding-top:15px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;text-align:center;"><p style="margin:0;">If you no longer wish to receive these emails, <a href="https://www.clicklocal.me/email?e={{EMAIL}}&s={{SHEET}}&lang=en" style="color:#9ca3af;">click here</a>.</p></div>`
   };
 
   // Update state
@@ -857,7 +860,9 @@ app.post('/api/campaign-resume', async (req, res) => {
           : template.content;
 
         if (optOutLang && optOutFooters[optOutLang]) {
-          html += optOutFooters[optOutLang].replace('{{EMAIL}}', encodeURIComponent(recipient.email));
+          html += optOutFooters[optOutLang]
+            .replace('{{EMAIL}}', encodeURIComponent(recipient.email))
+            .replace('{{SHEET}}', encodeURIComponent(sheetName));
         }
 
         // Wrap all links with click tracking
@@ -902,7 +907,13 @@ app.post('/api/campaign-resume', async (req, res) => {
     state.status = 'complete';
     state.completedAt = new Date().toISOString();
     saveData(CAMPAIGN_STATE_FILE, state);
-    sendSSE('complete', { campaignId, total: recipients.length });
+
+    // Count sent/failed from logs for this campaign
+    const campaignLogs = logs.filter(l => l.campaignId === campaignId);
+    const sentCount = campaignLogs.filter(l => l.status === 'sent').length;
+    const failedCount = campaignLogs.filter(l => l.status === 'failed').length;
+
+    sendSSE('complete', { campaignId, total: recipients.length, sent: sentCount, failed: failedCount });
   })();
 });
 

@@ -208,5 +208,25 @@
     "timestamp": "2026-01-13T20:38:00.640Z",
     "status": "sent",
     "messageId": "<62074880-4c83-22a4-7a76-1d0ec7689cea@clicklocal.me>"
+  },
+  {
+    "id": "c2ba4d37-f761-4966-8e74-ee1f6d706a8f",
+    "campaignId": "bfa1f3e4-1a06-460a-9bf5-9d2bf730fc24",
+    "templateName": "Retailer outreach No.2 - Sustainable (correction)",
+    "email": "lourensvdzee@gmail.com",
+    "subject": "ClickLocal-Update: jetzt mit funktionierenden Links",
+    "timestamp": "2026-01-15T07:38:29.503Z",
+    "status": "sent",
+    "messageId": "<c7a099c2-080a-b2ed-55b8-f77b6bc69efb@clicklocal.me>"
+  },
+  {
+    "id": "44922c9a-d6be-4973-8864-988989132a2e",
+    "campaignId": "bfa1f3e4-1a06-460a-9bf5-9d2bf730fc24",
+    "templateName": "Retailer outreach No.2 - Sustainable (correction)",
+    "email": "info@clicklocal.me",
+    "subject": "ClickLocal-Update: jetzt mit funktionierenden Links",
+    "timestamp": "2026-01-15T07:40:30.813Z",
+    "status": "sent",
+    "messageId": "<bf529aad-7526-9197-6ddc-82333f1c77a1@clicklocal.me>"
   }
 ]
