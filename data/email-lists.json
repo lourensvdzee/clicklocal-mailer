@@ -1,7 +1,7 @@
 [
   {
     "id": "4409222b-06d4-4146-8689-140ef75b18fb",
-    "name": "Test List Lourens",
+    "name": "Test List: Lourens & Anne",
     "emails": [
       {
         "email": "lourensvdzee@hotmail.com"
@@ -23,11 +23,11 @@
       }
     ],
     "createdAt": "2026-01-13T16:05:03.363Z",
-    "updatedAt": "2026-01-13T20:27:10.420Z"
+    "updatedAt": "2026-01-15T08:14:30.298Z"
   },
   {
     "id": "e495df54-a148-42e4-a471-d8f980e6c454",
-    "name": "Lourens only",
+    "name": "Test List: Lourens only",
     "sheetName": "Lourens_only",
     "emails": [
       {
@@ -44,6 +44,942 @@
       }
     ],
     "createdAt": "2026-01-14T20:09:19.598Z",
-    "updatedAt": "2026-01-14T20:09:19.598Z"
+    "updatedAt": "2026-01-15T08:14:44.673Z"
+  },
+  {
+    "id": "9229ed49-1135-4783-bb5a-3515ea5f14b0",
+    "name": "Retailers Berlin - Sustainable",
+    "sheetName": "Retailers_Berlin_-_Sustainable",
+    "emails": [
+      {
+        "email": "team@wertvoll-berlin.com"
+      },
+      {
+        "email": "hallo@deargoods.com"
+      },
+      {
+        "email": "hallo@slowfriday.de"
+      },
+      {
+        "email": "shop@givnberlin.com"
+      },
+      {
+        "email": "mail@schoemig-porzellan.de"
+      },
+      {
+        "email": "kontakt@lyk-carpet.de"
+      },
+      {
+        "email": "mail@hettiberlin.com"
+      },
+      {
+        "email": "info@greeneryliving.com"
+      },
+      {
+        "email": "info@blumenfisch-floristik.de"
+      },
+      {
+        "email": "service@blumenfisch-onlineshop.de"
+      },
+      {
+        "email": "contact@futomania.de"
+      },
+      {
+        "email": "hello@nutsandwoods.de"
+      },
+      {
+        "email": "wir@michelberger.farm"
+      },
+      {
+        "email": "laden@supermarche-berlin.de"
+      },
+      {
+        "email": "onlineshop@stereoki.com"
+      },
+      {
+        "email": "anna.schieber@uvr-berlin.de"
+      },
+      {
+        "email": "service@tranquillo-shop.de"
+      },
+      {
+        "email": "shop@goodbuy.eu"
+      },
+      {
+        "email": "info@kolo-berlin.com"
+      },
+      {
+        "email": "mail@maralou-berlin.de"
+      },
+      {
+        "email": "team@studiohertzberg.de"
+      },
+      {
+        "email": "info@spreeheidi.de"
+      },
+      {
+        "email": "info@spielekunst.de"
+      },
+      {
+        "email": "post@klix-berlin.de"
+      },
+      {
+        "email": "info@das-suesse-leben.de"
+      },
+      {
+        "email": "info@weichardt.de"
+      },
+      {
+        "email": "info@blumen-koch.de"
+      },
+      {
+        "email": "info@ajanela.de"
+      },
+      {
+        "email": "info@marsano-berlin.de"
+      },
+      {
+        "email": "info@crowcyclery.de"
+      },
+      {
+        "email": "hello@neunest.de"
+      },
+      {
+        "email": "hello@homagestore.com"
+      },
+      {
+        "email": "info@aesthetikaclothing.com"
+      },
+      {
+        "email": "hello@ginamelosi.com"
+      },
+      {
+        "email": "directsales.europe@patagonia.com"
+      },
+      {
+        "email": "info@nudiejeans.com"
+      },
+      {
+        "email": "info@clara-kaesdorf.com"
+      },
+      {
+        "email": "info@nochmall.de"
+      },
+      {
+        "email": "collaborate@whitelabel-project.com"
+      },
+      {
+        "email": "mail@rotelippen-naturkosmetik.de"
+      },
+      {
+        "email": "info@art-chocolat.de"
+      },
+      {
+        "email": "team@360-outdoor.de"
+      },
+      {
+        "email": "info@lebenskleidung.com"
+      },
+      {
+        "email": "berlin@rafinesse-tristesse.com"
+      },
+      {
+        "email": "wholesale@tradenotaid.de"
+      },
+      {
+        "email": "malin@kleiderei.com"
+      },
+      {
+        "email": "studio@platte.berlin"
+      },
+      {
+        "email": "beratung@grueneerde.com"
+      },
+      {
+        "email": "mail@konk-berlin.de"
+      },
+      {
+        "email": "fs@felicitasseidler.com"
+      },
+      {
+        "email": "team@s-wert.de"
+      },
+      {
+        "email": "hallo@chocolate.rosacanina.eu"
+      },
+      {
+        "email": "info@meandmymum.de"
+      },
+      {
+        "email": "jeanine@jyoti-fairworks.org"
+      },
+      {
+        "email": "elle@hit-in.tv"
+      },
+      {
+        "email": "info@tiare.de"
+      },
+      {
+        "email": "info@blumen-goldbeck.de"
+      },
+      {
+        "email": "hallo@hug-and-grow.de"
+      },
+      {
+        "email": "moin@karmakollektiv.berlin"
+      },
+      {
+        "email": "hallo@genusshandwerk.berlin"
+      },
+      {
+        "email": "info@premium-haberdashery.de"
+      },
+      {
+        "email": "mail@weltladen-spandau.de"
+      },
+      {
+        "email": "info@caraya-coffee.com"
+      },
+      {
+        "email": "info@pollypaper.de"
+      },
+      {
+        "email": "hello@quite-quiet.com"
+      },
+      {
+        "email": "post@rotation-boutique.de"
+      }
+    ],
+    "createdAt": "2026-01-15T08:18:05.607Z",
+    "updatedAt": "2026-01-15T08:18:05.607Z"
+  },
+  {
+    "id": "f550cebc-f9f5-4d38-93e0-f101d332e670",
+    "name": "Retailers Berlin - Regular",
+    "sheetName": "Retailers_Berlin_-_Regular",
+    "emails": [
+      {
+        "email": "info@az-handy.berlin"
+      },
+      {
+        "email": "info@cym-kunstmalerbedarf.de"
+      },
+      {
+        "email": "info@eisen-doering.de"
+      },
+      {
+        "email": "info@c-adolph.de"
+      },
+      {
+        "email": "bestellung@modulor.de"
+      },
+      {
+        "email": "shop@foto-leistenschneider.de"
+      },
+      {
+        "email": "contact@goodshaus.com"
+      },
+      {
+        "email": "support@agasown.de"
+      },
+      {
+        "email": "info@studiohausen.com"
+      },
+      {
+        "email": "info@rubigodesign.de"
+      },
+      {
+        "email": "hay@hayberlin.de"
+      },
+      {
+        "email": "info@nordicurban.com"
+      },
+      {
+        "email": "info@rahaus.de"
+      },
+      {
+        "email": "service@granit.com"
+      },
+      {
+        "email": "service@hotelultra.de"
+      },
+      {
+        "email": "impressum@home24.de"
+      },
+      {
+        "email": "info@patchhome.de"
+      },
+      {
+        "email": "info@bramigk-breer.com"
+      },
+      {
+        "email": "info@weso-mehrfuerdeinheim.de"
+      },
+      {
+        "email": "service@idee-shop.com"
+      },
+      {
+        "email": "info@malstoff.de"
+      },
+      {
+        "email": "kontakt@boesner.com"
+      },
+      {
+        "email": "info@light-delux.com"
+      },
+      {
+        "email": "info@prediger.de"
+      },
+      {
+        "email": "info@lampen-lee-berlin.de"
+      },
+      {
+        "email": "info@occhio.com"
+      },
+      {
+        "email": "info@lichthauslaubstein.com"
+      },
+      {
+        "email": "info@berliner-lampenladen.de"
+      },
+      {
+        "email": "info@lichthausmoesch.de"
+      },
+      {
+        "email": "info@stm-licht.de"
+      },
+      {
+        "email": "info@vetrosphere-berlin.com"
+      },
+      {
+        "email": "info@lichthaushuebner.de"
+      },
+      {
+        "email": "info@yes-electronic.de"
+      },
+      {
+        "email": "kontakt@elektron-berlin.de"
+      },
+      {
+        "email": "info@medimax.de"
+      },
+      {
+        "email": "info@knittel-farben.de"
+      },
+      {
+        "email": "mail@hardwax.com"
+      },
+      {
+        "email": "info@tapeten-in-berlin.de"
+      },
+      {
+        "email": "info@hobbyshop.de"
+      },
+      {
+        "email": "info@tonsor.de"
+      },
+      {
+        "email": "mail@farbenewald.de"
+      },
+      {
+        "email": "mail@hotzel-line.com"
+      },
+      {
+        "email": "kontakt@tedox.de"
+      },
+      {
+        "email": "mail@oh-so-nice.de"
+      },
+      {
+        "email": "info@wmk.berlin"
+      },
+      {
+        "email": "info@restoreberlin.de"
+      },
+      {
+        "email": "mail@hauptstadt-moeblerei.de"
+      },
+      {
+        "email": "info@living-berlin.com"
+      },
+      {
+        "email": "info@moebel-huebner.de"
+      },
+      {
+        "email": "info@originalinberlin.de"
+      },
+      {
+        "email": "info@soulobjects.de"
+      },
+      {
+        "email": "anfrage@ulismoebel-stube.de"
+      },
+      {
+        "email": "info@urban-industrial.de"
+      },
+      {
+        "email": "info@hyggeinterior.com"
+      },
+      {
+        "email": "service@smow.de"
+      },
+      {
+        "email": "info@kollwitz45.com"
+      },
+      {
+        "email": "hello@lakeside.de"
+      },
+      {
+        "email": "mail@schoenhauser-design.de"
+      },
+      {
+        "email": "info@lebensart-berlin.de"
+      },
+      {
+        "email": "mail@faiblefurnishings.com"
+      },
+      {
+        "email": "info@topf-pfanne.de"
+      },
+      {
+        "email": "info@kuechenladen.com"
+      },
+      {
+        "email": "mh@kochenundwuerzen.de"
+      },
+      {
+        "email": "info@zwilling.com"
+      },
+      {
+        "email": "info@kitchenunique.de"
+      },
+      {
+        "email": "info@bakeroom.de"
+      },
+      {
+        "email": "info@holzapfel-berlin.de"
+      },
+      {
+        "email": "info@dalink-stoffe.de"
+      },
+      {
+        "email": "hallo@stoffefactory.de"
+      },
+      {
+        "email": "info@frautulpe.de"
+      },
+      {
+        "email": "info@fabricsforsale.de"
+      },
+      {
+        "email": "info@simplystitch.de"
+      },
+      {
+        "email": "mail@stoff-wohnkultur.de"
+      },
+      {
+        "email": "kontakt@1000stoff.de"
+      },
+      {
+        "email": "info@tolkostoffe.de"
+      },
+      {
+        "email": "info@smilla-berlin.de"
+      },
+      {
+        "email": "info@stoffetexal.de"
+      },
+      {
+        "email": "hallo@lottiklein.de"
+      },
+      {
+        "email": "info@keauti.com"
+      },
+      {
+        "email": "hello@co-dressing.com"
+      },
+      {
+        "email": "hello@fetedelaboutique.com"
+      },
+      {
+        "email": "info@st-germaine.de"
+      },
+      {
+        "email": "hello@aprilfirst.de"
+      },
+      {
+        "email": "hello@nottoosweetvintage.com"
+      },
+      {
+        "email": "am@andreasmurkudis.com"
+      },
+      {
+        "email": "shop@papierwelt.com"
+      },
+      {
+        "email": "kundenservice@shoepassion.de"
+      },
+      {
+        "email": "info@pantoffeleck.de"
+      },
+      {
+        "email": "kundenbetreuung@baer-schuhe.de"
+      },
+      {
+        "email": "shop@boots-and-shoes.de"
+      },
+      {
+        "email": "kontakt@grandezza-shoes.de"
+      },
+      {
+        "email": "info@paulsboutiqueberlin.de"
+      },
+      {
+        "email": "or@antique-jewellery.de"
+      },
+      {
+        "email": "angela@bazkberlin.com"
+      },
+      {
+        "email": "info@makidy-muttermilchschmuck.de"
+      },
+      {
+        "email": "contact@maitea.de"
+      },
+      {
+        "email": "sergioengel@sergioengel.de"
+      },
+      {
+        "email": "info@in-jewels.com"
+      },
+      {
+        "email": "info@glj-shop.com"
+      },
+      {
+        "email": "shop@peters-art.de"
+      },
+      {
+        "email": "shop@michaelabinder.de"
+      },
+      {
+        "email": "contact@wellendorff.com"
+      },
+      {
+        "email": "info@vintageberlin.de"
+      },
+      {
+        "email": "info@curiousfoxbooks.com"
+      },
+      {
+        "email": "info@zabriskie.de"
+      },
+      {
+        "email": "info@saintgeorgesbookshop.com"
+      },
+      {
+        "email": "bookshop@chaptersberlin.com"
+      },
+      {
+        "email": "info@doyoureadme.de"
+      },
+      {
+        "email": "info@about-bookshop.de"
+      },
+      {
+        "email": "laden@prinz-eisenherz.com"
+      },
+      {
+        "email": "info@pro-qm.de"
+      },
+      {
+        "email": "chef@hundthammerstein.de"
+      },
+      {
+        "email": "hello@ivallansbooks.com"
+      },
+      {
+        "email": "info@margaschoeller.de"
+      },
+      {
+        "email": "hallo@dieguteseiteberlin.de"
+      },
+      {
+        "email": "antje.zuelow@vielspiel.de"
+      },
+      {
+        "email": "service@kadewe.de"
+      },
+      {
+        "email": "info@ratzekatz.de"
+      },
+      {
+        "email": "mail@spielbrett-berlin.de"
+      },
+      {
+        "email": "mail@acoustic-music-store.de"
+      },
+      {
+        "email": "info@guitar-shop.de"
+      },
+      {
+        "email": "mail@noisy-rooms.com"
+      },
+      {
+        "email": "info@orientmusikhaus.de"
+      },
+      {
+        "email": "info@schneidersladen.de"
+      },
+      {
+        "email": "support@banzaimusic.com"
+      },
+      {
+        "email": "info@musikhaus-lichterfelde.de"
+      },
+      {
+        "email": "service@pukkaberlin.com"
+      },
+      {
+        "email": "info@spacehall.de"
+      },
+      {
+        "email": "info@audio-in.net"
+      },
+      {
+        "email": "info@dodobeach.de"
+      },
+      {
+        "email": "mail@oye-records.com"
+      },
+      {
+        "email": "mail@musicland-spandau.de"
+      },
+      {
+        "email": "music@lefterrecords.berlin"
+      },
+      {
+        "email": "info@betterrun.shop"
+      },
+      {
+        "email": "postkartenladen@ararat-berlin.de"
+      },
+      {
+        "email": "info@handhelden-shop.de"
+      },
+      {
+        "email": "info@stempelbar.de"
+      },
+      {
+        "email": "info@webspace-electronic.de"
+      },
+      {
+        "email": "info@we-online.com"
+      },
+      {
+        "email": "info@berlinphonestore.de"
+      },
+      {
+        "email": "info@rsvp-berlin.de"
+      },
+      {
+        "email": "info@mymobilebutik.de"
+      },
+      {
+        "email": "info@houseofmobile-berlin.de"
+      },
+      {
+        "email": "info@europa-center-berlin.de"
+      },
+      {
+        "email": "info@technik-phone.de"
+      },
+      {
+        "email": "service@11teamsports.com"
+      },
+      {
+        "email": "hello@victoriashoes.us"
+      },
+      {
+        "email": "support@fotomeyer.de"
+      },
+      {
+        "email": "info@fotoimpex.de"
+      },
+      {
+        "email": "info@safelightberlin.com"
+      },
+      {
+        "email": "info@clickundsurr.de"
+      },
+      {
+        "email": "info@whitewall.com"
+      },
+      {
+        "email": "info@teeteathe.de"
+      },
+      {
+        "email": "info@fotoladen-berlin-mitte.de"
+      },
+      {
+        "email": "info@fotokotti.de"
+      },
+      {
+        "email": "info@bikeparkberlin.de"
+      },
+      {
+        "email": "info@rad-race.com"
+      },
+      {
+        "email": "info@premium-bikeshop.de"
+      },
+      {
+        "email": "mail@wingwheels.com"
+      },
+      {
+        "email": "kontakt@zumgoldenenlenker.de"
+      },
+      {
+        "email": "friedrichshain@radwelt.berlin"
+      },
+      {
+        "email": "info@8bar-bikes.com"
+      },
+      {
+        "email": "laden@radfieber.de"
+      },
+      {
+        "email": "webshop@bike-punk.com"
+      },
+      {
+        "email": "contact@neworder.berlin"
+      },
+      {
+        "email": "info@cube-store.nanobike.de"
+      },
+      {
+        "email": "info@twofinewheels.com"
+      },
+      {
+        "email": "info@camp4.de"
+      },
+      {
+        "email": "berlin@der-aussteiger.de"
+      },
+      {
+        "email": "info@globetrotter.de"
+      },
+      {
+        "email": "info@mont-k.de"
+      },
+      {
+        "email": "service@fritz-berger.de"
+      },
+      {
+        "email": "info@campingcenter24.de"
+      },
+      {
+        "email": "info@utopia-camping.com"
+      },
+      {
+        "email": "hallo@copnic-camper.de"
+      },
+      {
+        "email": "berlin@langbrett.com"
+      },
+      {
+        "email": "info@camping-center-berlin.de"
+      },
+      {
+        "email": "info@freizeit-wittke.de"
+      },
+      {
+        "email": "news@sport-freak.de"
+      },
+      {
+        "email": "info@sport-line.de"
+      },
+      {
+        "email": "info@fitshop.de"
+      },
+      {
+        "email": "info@kampfsportartikel-berlin.de"
+      },
+      {
+        "email": "service@down-town-sports.de"
+      },
+      {
+        "email": "spo@futspo.de"
+      },
+      {
+        "email": "hallo@biogoods.de"
+      },
+      {
+        "email": "info@alnatura.de"
+      },
+      {
+        "email": "hello@thebiofoods.com"
+      },
+      {
+        "email": "contact@robinhood.store"
+      },
+      {
+        "email": "info@bio-insel.de"
+      },
+      {
+        "email": "hallo@bioase.berlin"
+      },
+      {
+        "email": "info@biomarkt.de"
+      },
+      {
+        "email": "info@weinberg-berlin.de"
+      },
+      {
+        "email": "info@weinerei.com"
+      },
+      {
+        "email": "info@planet-weinhandel.de"
+      },
+      {
+        "email": "info@weinladen.com"
+      },
+      {
+        "email": "info@rocketwineberlin.com"
+      },
+      {
+        "email": "info@viniculture.de"
+      },
+      {
+        "email": "simqbravo@labodega-berlin.com"
+      },
+      {
+        "email": "kontakt@gitan-wein.de"
+      },
+      {
+        "email": "info@berlvin.com"
+      },
+      {
+        "email": "contact@naturalselection.wine"
+      },
+      {
+        "email": "info@lepicerie-store.de"
+      },
+      {
+        "email": "info@essenwieimrestaurant.de"
+      },
+      {
+        "email": "contact@100-pct.com"
+      },
+      {
+        "email": "info@maitrephilippe.de"
+      },
+      {
+        "email": "info@borso-deli.de"
+      },
+      {
+        "email": "info@bohea.de"
+      },
+      {
+        "email": "info@teekraenzchen.eu"
+      },
+      {
+        "email": "info@unielektro.de"
+      },
+      {
+        "email": "info@kingsteagarden.de"
+      },
+      {
+        "email": "info@cathefleur.de"
+      },
+      {
+        "email": "info@chaya.de"
+      },
+      {
+        "email": "info@teeshop-berlin.de"
+      },
+      {
+        "email": "hello@no-cosmetics.de"
+      },
+      {
+        "email": "hilfe@purish.com"
+      },
+      {
+        "email": "welcome@breathe-cosmetics.com"
+      },
+      {
+        "email": "kontakt@beauty-cosmetics.de"
+      },
+      {
+        "email": "kontakt@anowishop.de"
+      },
+      {
+        "email": "hello@brewingbeauty.co"
+      },
+      {
+        "email": "post@brilliantkosmetik.de"
+      },
+      {
+        "email": "info@shop-unico.com"
+      },
+      {
+        "email": "info@kryolan-city.de"
+      },
+      {
+        "email": "contact@rosental.de"
+      },
+      {
+        "email": "info@vedanaturals.de"
+      },
+      {
+        "email": "info@neo-organic.de"
+      },
+      {
+        "email": "info@vitalia-reformhaus.de"
+      },
+      {
+        "email": "contact@ory-berlin.de"
+      },
+      {
+        "email": "info@thanknature.de"
+      },
+      {
+        "email": "info@lotte-naturkosmetik.de"
+      },
+      {
+        "email": "info@muddastadt-berlin.de"
+      },
+      {
+        "email": "info@ampelmann.de"
+      },
+      {
+        "email": "info@promobo.de"
+      },
+      {
+        "email": "info@elbenwald.de"
+      },
+      {
+        "email": "shop@presentandpaper.com"
+      },
+      {
+        "email": "info@laden13-buerobedarf.de"
+      },
+      {
+        "email": "info@papeterie-berlin.de"
+      },
+      {
+        "email": "info@schoeneschreibwaren.com"
+      },
+      {
+        "email": "post@zweiteliebe.net"
+      },
+      {
+        "email": "info@zeha-berlin.de"
+      },
+      {
+        "email": "info@thoerner.de"
+      }
+    ],
+    "createdAt": "2026-01-15T11:09:34.137Z",
+    "updatedAt": "2026-01-15T11:09:34.137Z"
   }
 ]
