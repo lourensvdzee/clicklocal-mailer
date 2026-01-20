@@ -66,6 +66,13 @@ function formatTimeRemaining(ms) {
 }
 
 /**
+ * Encode sheet name to hide it in URLs (Base64)
+ */
+function encodeSheetName(sheetName) {
+  return Buffer.from(sheetName).toString('base64').replace(/=/g, '');
+}
+
+/**
  * Wrap all links in HTML with click tracking
  * Extracts link text as the link name for tracking
  * @param {string} html - The HTML content
@@ -77,6 +84,9 @@ function wrapLinksWithTracking(html, email, sheetName) {
   // Match <a href="...">link text</a> patterns
   // Captures: href URL and link text (handles nested tags like <b>)
   const linkRegex = /<a\s+([^>]*href=["']([^"']+)["'][^>]*)>([\s\S]*?)<\/a>/gi;
+
+  // Encode sheet name to hide it in URLs
+  const encodedSheet = encodeSheetName(sheetName);
 
   return html.replace(linkRegex, (match, attrs, url, linkText) => {
     // Skip if already a tracking link
@@ -98,8 +108,8 @@ function wrapLinksWithTracking(html, email, sheetName) {
       }
     }
 
-    // Build tracking URL
-    const trackingUrl = `https://www.clicklocal.me/api/click?e=${encodeURIComponent(email)}&s=${encodeURIComponent(sheetName)}&url=${encodeURIComponent(url)}&link=${encodeURIComponent(linkName)}`;
+    // Build tracking URL with encoded sheet name
+    const trackingUrl = `https://www.clicklocal.me/api/click?e=${encodeURIComponent(email)}&s=${encodedSheet}&url=${encodeURIComponent(url)}&link=${encodeURIComponent(linkName)}`;
 
     // Replace href in original attributes
     const newAttrs = attrs.replace(/href=["'][^"']+["']/, `href="${trackingUrl}"`);
@@ -660,7 +670,7 @@ app.post('/api/send', async (req, res) => {
         if (optOutLang && optOutFooters[optOutLang]) {
           const footer = optOutFooters[optOutLang]
             .replace('{{EMAIL}}', encodeURIComponent(recipient.email))
-            .replace('{{SHEET}}', encodeURIComponent(sheetName));
+            .replace('{{SHEET}}', encodeSheetName(sheetName));
           html += footer;
         }
 
@@ -668,7 +678,7 @@ app.post('/api/send', async (req, res) => {
         html = wrapLinksWithTracking(html, recipient.email, sheetName);
 
         // Add tracking pixel for open tracking
-        const trackingPixel = `<img src="https://www.clicklocal.me/api/track?e=${encodeURIComponent(recipient.email)}&s=${encodeURIComponent(sheetName)}" width="1" height="1" style="display:none;width:1px;height:1px;" alt="">`;
+        const trackingPixel = `<img src="https://www.clicklocal.me/api/track?e=${encodeURIComponent(recipient.email)}&s=${encodeSheetName(sheetName)}" width="1" height="1" style="display:none;width:1px;height:1px;" alt="">`;
         html += trackingPixel;
 
         const result = await sendEmail({
@@ -862,14 +872,14 @@ app.post('/api/campaign-resume', async (req, res) => {
         if (optOutLang && optOutFooters[optOutLang]) {
           html += optOutFooters[optOutLang]
             .replace('{{EMAIL}}', encodeURIComponent(recipient.email))
-            .replace('{{SHEET}}', encodeURIComponent(sheetName));
+            .replace('{{SHEET}}', encodeSheetName(sheetName));
         }
 
         // Wrap all links with click tracking
         html = wrapLinksWithTracking(html, recipient.email, sheetName);
 
         // Add tracking pixel for open tracking
-        const trackingPixel = `<img src="https://www.clicklocal.me/api/track?e=${encodeURIComponent(recipient.email)}&s=${encodeURIComponent(sheetName)}" width="1" height="1" style="display:none;width:1px;height:1px;" alt="">`;
+        const trackingPixel = `<img src="https://www.clicklocal.me/api/track?e=${encodeURIComponent(recipient.email)}&s=${encodeSheetName(sheetName)}" width="1" height="1" style="display:none;width:1px;height:1px;" alt="">`;
         html += trackingPixel;
 
         const result = await sendEmail({ to: recipient.email, subject: template.subject, html });

@@ -3318,5 +3318,45 @@
     "timestamp": "2026-01-15T19:16:37.066Z",
     "status": "sent",
     "messageId": "<f123388d-107f-c18d-89f8-f0db53267657@clicklocal.me>"
+  },
+  {
+    "id": "13390e56-0bca-4bda-9868-134b60421945",
+    "campaignId": "725c0e17-0118-4e5f-a770-35f614f8c812",
+    "templateName": "Retailer outreach No.3 - Sustainable + Regular",
+    "email": "lourensvdzee@hotmail.com",
+    "subject": "ClickLocal: Mehr lokale Kunden für Berliner Läden",
+    "timestamp": "2026-01-20T14:15:46.732Z",
+    "status": "sent",
+    "messageId": "<00191689-2948-b649-df94-6c608cd9b9ca@clicklocal.me>"
+  },
+  {
+    "id": "70ead3f1-8e8f-4365-bfd8-8b376e853716",
+    "campaignId": "725c0e17-0118-4e5f-a770-35f614f8c812",
+    "templateName": "Retailer outreach No.3 - Sustainable + Regular",
+    "email": "lordemo@hotmail.com",
+    "subject": "ClickLocal: Mehr lokale Kunden für Berliner Läden",
+    "timestamp": "2026-01-20T14:17:48.615Z",
+    "status": "sent",
+    "messageId": "<e8508b72-7295-cb42-a736-619b10c68d92@clicklocal.me>"
+  },
+  {
+    "id": "2dea0cd4-42a2-4444-9721-1e251aec2d1c",
+    "campaignId": "725c0e17-0118-4e5f-a770-35f614f8c812",
+    "templateName": "Retailer outreach No.3 - Sustainable + Regular",
+    "email": "lourensvdzee@gmail.com",
+    "subject": "ClickLocal: Mehr lokale Kunden für Berliner Läden",
+    "timestamp": "2026-01-20T14:19:49.888Z",
+    "status": "sent",
+    "messageId": "<889d2e2e-741f-a1ab-abd1-4c2f794d7708@clicklocal.me>"
+  },
+  {
+    "id": "70ad3d0a-3eef-4586-992e-bba55881c452",
+    "campaignId": "725c0e17-0118-4e5f-a770-35f614f8c812",
+    "templateName": "Retailer outreach No.3 - Sustainable + Regular",
+    "email": "info@clicklocal.me",
+    "subject": "ClickLocal: Mehr lokale Kunden für Berliner Läden",
+    "timestamp": "2026-01-20T14:21:51.153Z",
+    "status": "sent",
+    "messageId": "<c40d223a-9ab0-905c-c309-14b0620fde86@clicklocal.me>"
   }
 ]
